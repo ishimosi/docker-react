@@ -1,0 +1,24 @@
+language: generic
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - docker build -t changgyunkim/docker-react -f Dockerfile.dev .
+
+script:
+  - docker run -e CI=true changgyunkim/docker-react npm run test
+
+deploy:
+  provider: elasticbeanstalk
+  region: "ap-northeast-2"
+  app: "docker-react"
+  env: "DockerReact-env"
+  bucket_name: "elasticbeanstalk-ap-northeast-2-314206178247"
+  bucket_path: "docker-react"
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
+
